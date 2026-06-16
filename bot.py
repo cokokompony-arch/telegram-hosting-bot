@@ -23,22 +23,20 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = query.from_user.id
 
     if query.data == "premium":
-        keyboard = [
-            [
-                InlineKeyboardButton(
-                    "📞 Contact Admin",
-                    url="https://t.me/lokiiix46"
-                )
-            ]
+    keyboard = [
+        [
+            InlineKeyboardButton(
+                "📞 Contact Admin",
+                url="https://t.me/lokiiix46"
+            )
         ]
+    ]
 
-        await query.message.reply_text(
-            "💎 PREMIUM PLAN 💎\n\n"
-            "💰 ₹100 = 5 Bots\n\n"
-            "📸 After payment send screenshot to admin.\n\n"
-            "👨‍💻 Admin: @lokiiix46",
-            reply_markup=InlineKeyboardMarkup(keyboard)
-        )
+    await query.message.reply_photo(
+        photo="https://i.ibb.co/yc6sgyHC/Picsart-26-06-16-08-15-36-177.jpg",
+        caption="💎 PREMIUM PLAN 💎\n\n💰 ₹100 = 5 Bots\n\n📸 After payment send screenshot to admin.\n\n👨‍💻 Admin: @lokiiix46",
+        reply_markup=InlineKeyboardMarkup(keyboard)
+    )
 
     elif query.data == "account":
         await query.message.reply_text(
