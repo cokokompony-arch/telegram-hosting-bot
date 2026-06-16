@@ -1,34 +1,28 @@
-if query.data == "host":
-        await query.message.reply_text(
-            "📤 Send bot.py and requirements.txt"
-        )
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
-    elif query.data == "mybots":
-        folder = f"user_bots/{user_id}"
+BOT_TOKEN = "8618104541:AAHTKfKEEcAzCvuAhg7b2l-pGshkkQrgOqA"
 
-        if not os.path.exists(folder):
-            await query.message.reply_text(
-                "📂 No bots uploaded."
-            )
-            return
 
-        files = "\n".join(os.listdir(folder))
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [
+        [InlineKeyboardButton("💎 Premium", callback_data="premium")],
+        [InlineKeyboardButton("👤 Account", callback_data="account")]
+    ]
 
-        await query.message.reply_text(
-            f"📂 Your Files:\n\n{files}"
-        )
+    await update.message.reply_text(
+        "🚀 Welcome To Bot Hosting Panel",
+        reply_markup=InlineKeyboardMarkup(keyboard)
+    )
 
-    elif query.data == "startbot":
-        await query.message.reply_text(
-            "▶️ Start Bot feature coming soon"
-        )
 
-    elif query.data == "stopbot":
-        await query.message.reply_text(
-            "⏹️ Stop Bot feature coming soon"
-        )
+async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()
 
-    elif query.data == "premium":
+    user_id = query.from_user.id
+
+    if query.data == "premium":
         keyboard = [
             [
                 InlineKeyboardButton(
@@ -39,26 +33,28 @@ if query.data == "host":
         ]
 
         await query.message.reply_text(
-            "💎 Premium Plan\n\n"
+            "💎 PREMIUM PLAN 💎\n\n"
             "💰 ₹100 = 5 Bots\n\n"
-            "📸 Send payment screenshot to admin.\n\n"
+            "📸 After payment send screenshot to admin.\n\n"
             "👨‍💻 Admin: @lokiiix46",
             reply_markup=InlineKeyboardMarkup(keyboard)
         )
 
     elif query.data == "account":
-        cur.execute(
-            "SELECT plan FROM users WHERE user_id=?",
-            (user_id,)
-        )
-
-        row = cur.fetchone()
-        plan = row[0] if row else "free"
-
         await query.message.reply_text(
-            f"👤 Account\n\n"
-            f"🆔 {user_id}\n"
-            f"💎 Plan: {plan}"
+            f"👤 Account\n\n🆔 {user_id}"
         )
-        if __name__ == "__main__":
+
+
+def main():
+    app = Application.builder().token(BOT_TOKEN).build()
+
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CallbackQueryHandler(button_handler))
+
+    print("Bot Started")
+    app.run_polling()
+
+
+if __name__ == "__main__":
     main()
