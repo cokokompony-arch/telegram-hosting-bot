@@ -157,7 +157,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
     elif query.data == "premium":
-        keyboard = [
+    keyboard = [
         [
             InlineKeyboardButton(
                 "📞 Contact Admin",
@@ -166,20 +166,15 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ]
     ]
 
-    await query.message.reply_photo(
-        photo="https://i.ibb.co/SXNn3wzZ/payment.jpg",
-        caption=(
-            "💎 PREMIUM PLAN 💎\n\n"
-            "💰 Price: ₹100\n"
-            "🤖 Premium Limit: 5 Bots\n\n"
-            "📸 After payment, send the payment screenshot to the admin.\n"
-            "✅ Your premium plan will be activated after verification.\n\n"
-            "👨‍💻 Admin: @lokiiix46"
-        ),
+    await query.message.reply_text(
+        "💎 Premium Plan\n\n"
+        "💰 ₹100 = 5 Bots\n\n"
+        "📸 Send payment screenshot to admin.\n\n"
+        "👨‍💻 Admin: @lokiiix46",
         reply_markup=InlineKeyboardMarkup(keyboard)
-        )
+    )
 
-    elif query.data == "account":
+elif query.data == "account":
     cur.execute(
         "SELECT plan FROM users WHERE user_id=?",
         (user_id,)
