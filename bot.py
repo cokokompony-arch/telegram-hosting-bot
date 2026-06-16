@@ -1,12 +1,15 @@
-from telegram import Update
-from telegram.ext import Application, CommandHandler, ContextTypes
-import os
+import sqlite3
 
-TOKEN = os.getenv("TOKEN")
+conn = sqlite3.connect("users.db")
+cursor = conn.cursor()
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("🚀 Hosting Bot Running!")
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS users (
+    user_id INTEGER PRIMARY KEY,
+    username TEXT,
+    plan TEXT DEFAULT 'free',
+    bot_count INTEGER DEFAULT 0
+)
+""")
 
-app = Application.builder().token(TOKEN).build()
-app.add_handler(CommandHandler("start", start))
-app.run_polling()
+conn.commit()
