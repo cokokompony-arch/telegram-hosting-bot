@@ -1,45 +1,16 @@
-from telegram import Update
-from telegram.ext import Application, CommandHandler, ContextTypes
-import os
-import sqlite3
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-TOKEN = os.getenv("TOKEN")
+keyboard = [
+    [InlineKeyboardButton("➕ Host Bot", callback_data="host")],
+    [InlineKeyboardButton("📂 My Bots", callback_data="mybots")],
+    [InlineKeyboardButton("💎 Premium", callback_data="premium")],
+    [InlineKeyboardButton("👤 Account", callback_data="account")],
+    [InlineKeyboardButton("ℹ️ Help", callback_data="help")]
+]
 
-# Database
-conn = sqlite3.connect("users.db", check_same_thread=False)
-cursor = conn.cursor()
+reply_markup = InlineKeyboardMarkup(keyboard)
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS users (
-    user_id INTEGER PRIMARY KEY,
-    username TEXT,
-    plan TEXT DEFAULT 'free',
-    bot_count INTEGER DEFAULT 0
+await update.message.reply_text(
+    "👋 Welcome Michael 🚀",
+    reply_markup=reply_markup
 )
-""")
-conn.commit()
-
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user = update.effective_user
-
-    cursor.execute(
-        "INSERT OR IGNORE INTO users (user_id, username) VALUES (?, ?)",
-        (user.id, user.username)
-    )
-    conn.commit()
-
-    await update.message.reply_text(
-        f"👋 Welcome {user.first_name}!\n\n"
-        f"🆔 User ID: {user.id}\n"
-        f"📦 Plan: Free\n\n"
-        f"⚠️ Free users can run bots for 24 hours.\n"
-        f"💎 Premium Plan (3 Months): ₹100\n"
-        f"📞 Contact: @lokiiix46"
-    )
-
-app = Application.builder().token(TOKEN).build()
-
-app.add_handler(CommandHandler("start", start))
-
-print("Bot Running...")
-app.run_polling()
